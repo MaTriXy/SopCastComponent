@@ -1,10 +1,11 @@
 package com.laifeng.sopcastdemo;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
 import com.laifeng.sopcastsdk.ui.CameraLivingView;
 
-public class PartActivity extends Activity {
+public class PartActivity extends AppCompatActivity {
     private CameraLivingView mLFLiveView;
 
     @Override

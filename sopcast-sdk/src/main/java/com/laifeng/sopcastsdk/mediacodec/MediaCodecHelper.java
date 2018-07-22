@@ -14,7 +14,7 @@ import android.media.MediaCodecList;
  * @Version
  */
 
-@TargetApi(18)
+
 public class MediaCodecHelper {
 
     /**

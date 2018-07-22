@@ -1,11 +1,11 @@
 package com.laifeng.sopcastsdk.camera.focus;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+
 import com.laifeng.sopcastsdk.R;
 import com.laifeng.sopcastsdk.camera.CameraData;
 import com.laifeng.sopcastsdk.camera.CameraHolder;
@@ -13,7 +13,6 @@ import com.laifeng.sopcastsdk.camera.CameraHolder;
 /**
  * Focus ring HUD that lets user select focus point (tap to focus)
  */
-@TargetApi(18)
 public class FocusPieView extends ImageView {
 
     public FocusPieView(Context context) {

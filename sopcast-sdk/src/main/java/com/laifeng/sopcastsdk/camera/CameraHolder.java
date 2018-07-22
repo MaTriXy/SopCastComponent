@@ -1,6 +1,5 @@
 package com.laifeng.sopcastsdk.camera;
 
-import android.annotation.TargetApi;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -23,7 +22,7 @@ import java.util.List;
  * @Time 上午11:57
  * @Version
  */
-@TargetApi(14)
+
 public class CameraHolder {
     private static final String TAG = "CameraHolder";
     private final static int FOCUS_WIDTH = 80;

@@ -10,13 +10,13 @@ import android.os.Build;
 import com.laifeng.sopcastsdk.configuration.AudioConfiguration;
 import com.laifeng.sopcastsdk.configuration.VideoConfiguration;
 import com.laifeng.sopcastsdk.constant.SopCastConstant;
+import com.laifeng.sopcastsdk.controller.StreamController;
 import com.laifeng.sopcastsdk.controller.audio.NormalAudioController;
 import com.laifeng.sopcastsdk.controller.video.ScreenVideoController;
-import com.laifeng.sopcastsdk.controller.StreamController;
 import com.laifeng.sopcastsdk.stream.packer.Packer;
 import com.laifeng.sopcastsdk.stream.sender.Sender;
-import com.laifeng.sopcastsdk.utils.SopCastUtils;
 import com.laifeng.sopcastsdk.utils.SopCastLog;
+import com.laifeng.sopcastsdk.utils.SopCastUtils;
 
 /**
  * @Title: ScreenRecordActivity

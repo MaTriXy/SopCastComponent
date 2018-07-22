@@ -40,28 +40,26 @@ public class AudioUtils {
     public static int getRecordBufferSize(AudioConfiguration audioConfiguration) {
         int frequency = audioConfiguration.frequency;
         int audioEncoding = audioConfiguration.encoding;
-        int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+        int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
         if(audioConfiguration.channelCount == 2) {
-            channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_STEREO;
+            channelConfiguration = AudioFormat.CHANNEL_IN_STEREO;
         }
-        int size = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
-        return size;
+        return AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
     }
 
-    @TargetApi(18)
+
     public static AudioRecord getAudioRecord(AudioConfiguration audioConfiguration) {
         int frequency = audioConfiguration.frequency;
         int audioEncoding = audioConfiguration.encoding;
-        int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+        int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
         if(audioConfiguration.channelCount == 2) {
-            channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_STEREO;
+            channelConfiguration = AudioFormat.CHANNEL_IN_STEREO;
         }
         int audioSource = MediaRecorder.AudioSource.MIC;
         if(audioConfiguration.aec) {
             audioSource = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
         }
-        AudioRecord audioRecord = new AudioRecord(audioSource, frequency,
+        return new AudioRecord(audioSource, frequency,
                 channelConfiguration, audioEncoding, getRecordBufferSize(audioConfiguration));
-        return audioRecord;
     }
 }

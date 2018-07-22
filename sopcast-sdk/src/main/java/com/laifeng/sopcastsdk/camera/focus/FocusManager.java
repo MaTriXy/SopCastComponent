@@ -10,6 +10,7 @@ public class FocusManager implements AutoFocusCallback {
 
     public interface FocusListener {
         void onFocusStart();
+
         void onFocusReturns(boolean success);
     }
 

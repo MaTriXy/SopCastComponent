@@ -9,7 +9,7 @@ import android.opengl.EGLExt;
 import android.opengl.EGLSurface;
 import android.view.Surface;
 
-@TargetApi(18)
+
 class InputSurface {
 	//---------------------------------------------------------------------
 	// CONSTANTS

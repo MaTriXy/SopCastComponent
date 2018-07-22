@@ -67,10 +67,10 @@ public class CameraView extends FrameLayout {
         LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mInflater.inflate(R.layout.layout_camera_view, this, true);
         mHandler = new WeakHandler();
-        mRenderSurfaceView = (RenderSurfaceView) findViewById(R.id.render_surface_view);
+        mRenderSurfaceView = findViewById(R.id.render_surface_view);
         mRenderSurfaceView.setZOrderMediaOverlay(isMediaOverlay);
         mRenderer = mRenderSurfaceView.getRenderer();
-        mFocusHudRing = (FocusPieView) findViewById(R.id.focus_view);
+        mFocusHudRing = findViewById(R.id.focus_view);
         mFocusManager = new FocusManager();
         mFocusManager.setListener(new MainFocusListener());
         mGestureDetector = new GestureDetector(mContext, new GestureListener());
@@ -81,6 +81,7 @@ public class CameraView extends FrameLayout {
         TypedArray a = mContext.obtainStyledAttributes(attrs,
                 R.styleable.CameraLivingView);
         mAspectRatio = a.getFloat(R.styleable.CameraLivingView_aspect_ratio, 9.0f / 16);
+        a.recycle();
     }
 
     public void setOnZoomProgressListener(CameraZoomListener listener) {

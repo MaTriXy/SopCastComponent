@@ -19,7 +19,7 @@ import java.io.IOException;
  * @Time 下午6:07
  * @Version
  */
-@TargetApi(18)
+
 public class AudioMediaCodec {
 
     public static MediaCodec getAudioMediaCodec(AudioConfiguration configuration){

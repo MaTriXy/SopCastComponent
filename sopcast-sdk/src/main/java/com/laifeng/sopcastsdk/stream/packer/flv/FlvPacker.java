@@ -25,7 +25,7 @@ import static com.laifeng.sopcastsdk.stream.packer.flv.FlvPackerHelper.VIDEO_SPE
  * @Time 上午11:51
  * @Version
  */
-@TargetApi(18)
+
 public class FlvPacker implements Packer, AnnexbHelper.AnnexbNaluListener{
 
     public static final int HEADER = 0;

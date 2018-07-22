@@ -17,18 +17,18 @@ import java.nio.ByteBuffer;
  * @Time 上午9:57
  * @Version
  */
-@TargetApi(18)
+
 public class AudioEncoder {
     private MediaCodec mMediaCodec;
     private OnAudioEncodeListener mListener;
     private AudioConfiguration mAudioConfiguration;
-    MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
+    private MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
 
-    public void setOnAudioEncodeListener(OnAudioEncodeListener listener) {
+    void setOnAudioEncodeListener(OnAudioEncodeListener listener) {
         mListener = listener;
     }
 
-    public AudioEncoder(AudioConfiguration audioConfiguration) {
+    AudioEncoder(AudioConfiguration audioConfiguration) {
         mAudioConfiguration = audioConfiguration;
     }
 
@@ -46,14 +46,14 @@ public class AudioEncoder {
     }
 
     synchronized void offerEncoder(byte[] input) {
-        if(mMediaCodec == null) {
+        if (mMediaCodec == null) {
             return;
         }
-        ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
-        ByteBuffer[] outputBuffers = mMediaCodec.getOutputBuffers();
+//        ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
+//        ByteBuffer[] outputBuffers = mMediaCodec.getOutputBuffers();
         int inputBufferIndex = mMediaCodec.dequeueInputBuffer(12000);
         if (inputBufferIndex >= 0) {
-            ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
+            ByteBuffer inputBuffer = mMediaCodec.getInputBuffer(inputBufferIndex);//inputBuffers[inputBufferIndex];
             inputBuffer.clear();
             inputBuffer.put(input);
             mMediaCodec.queueInputBuffer(inputBufferIndex, 0, input.length, 0, 0);
@@ -61,8 +61,8 @@ public class AudioEncoder {
 
         int outputBufferIndex = mMediaCodec.dequeueOutputBuffer(mBufferInfo, 12000);
         while (outputBufferIndex >= 0) {
-            ByteBuffer outputBuffer = outputBuffers[outputBufferIndex];
-            if(mListener != null) {
+            ByteBuffer outputBuffer = mMediaCodec.getOutputBuffer(outputBufferIndex);// outputBuffers[outputBufferIndex];
+            if (mListener != null) {
                 mListener.onAudioEncode(outputBuffer, mBufferInfo);
             }
             mMediaCodec.releaseOutputBuffer(outputBufferIndex, false);

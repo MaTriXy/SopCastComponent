@@ -1,13 +1,9 @@
 package com.laifeng.sopcastdemo;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,8 +20,6 @@ import com.laifeng.sopcastsdk.camera.CameraListener;
 import com.laifeng.sopcastsdk.configuration.AudioConfiguration;
 import com.laifeng.sopcastsdk.configuration.CameraConfiguration;
 import com.laifeng.sopcastsdk.configuration.VideoConfiguration;
-import com.laifeng.sopcastsdk.entity.Watermark;
-import com.laifeng.sopcastsdk.entity.WatermarkPosition;
 import com.laifeng.sopcastsdk.stream.packer.rtmp.RtmpPacker;
 import com.laifeng.sopcastsdk.stream.sender.rtmp.RtmpSender;
 import com.laifeng.sopcastsdk.ui.CameraLivingView;
@@ -35,7 +29,7 @@ import com.laifeng.sopcastsdk.video.effect.NullEffect;
 
 import static com.laifeng.sopcastsdk.constant.SopCastConstant.TAG;
 
-public class LandscapeActivity extends Activity {
+public class LandscapeActivity extends AppCompatActivity {
     private CameraLivingView mLFLiveView;
     private MultiToggleImageButton mMicBtn;
     private MultiToggleImageButton mFlashBtn;
@@ -129,7 +123,13 @@ public class LandscapeActivity extends Activity {
                     mLFLiveView.stop();
                     isRecording = false;
                 } else {
-                    mUploadDialog.show();
+                    //mUploadDialog.show();
+                    mRtmpSender.setAddress("rtmp://live-fra.twitch.tv/app/live_208418712_joEhQ8vk4EsAiBaEGxnXKSOHkEFbSt");//?bandwidthtest=true");
+                    mProgressConnecting.setVisibility(View.VISIBLE);
+                    Toast.makeText(LandscapeActivity.this, "start connecting", Toast.LENGTH_SHORT).show();
+                    mRecordBtn.setBackgroundResource(R.mipmap.ic_record_stop);
+                    mRtmpSender.connect();
+                    isRecording = true;
                 }
             }
         });
@@ -148,18 +148,18 @@ public class LandscapeActivity extends Activity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uploadUrl = mAddressET.getText().toString();
-                if(TextUtils.isEmpty(uploadUrl)) {
-                    Toast.makeText(LandscapeActivity.this, "Upload address is empty!", Toast.LENGTH_SHORT).show();
-                } else {
-                    mRtmpSender.setAddress(uploadUrl);
-                    mProgressConnecting.setVisibility(View.VISIBLE);
-                    Toast.makeText(LandscapeActivity.this, "start connecting", Toast.LENGTH_SHORT).show();
-                    mRecordBtn.setBackgroundResource(R.mipmap.ic_record_stop);
-                    mRtmpSender.connect();
-                    isRecording = true;
-                }
-                mUploadDialog.dismiss();
+//                String uploadUrl = mAddressET.getText().toString();
+//                if(TextUtils.isEmpty(uploadUrl)) {
+//                    Toast.makeText(LandscapeActivity.this, "Upload address is empty!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    mRtmpSender.setAddress(uploadUrl);
+//                    mProgressConnecting.setVisibility(View.VISIBLE);
+//                    Toast.makeText(LandscapeActivity.this, "start connecting", Toast.LENGTH_SHORT).show();
+//                    mRecordBtn.setBackgroundResource(R.mipmap.ic_record_stop);
+//                    mRtmpSender.connect();
+//                    isRecording = true;
+//                }
+//                mUploadDialog.dismiss();
             }
         });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -180,16 +180,14 @@ public class LandscapeActivity extends Activity {
         mLFLiveView.setCameraConfiguration(cameraConfiguration);
 
         VideoConfiguration.Builder videoBuilder = new VideoConfiguration.Builder();
-        videoBuilder.setSize(640, 360);
+        //videoBuilder.setSize(1280, 720);
         mVideoConfiguration = videoBuilder.build();
         mLFLiveView.setVideoConfiguration(mVideoConfiguration);
 
-        //设置水印
-        Bitmap watermarkImg = BitmapFactory.decodeResource(getResources(), R.mipmap.watermark);
-        Watermark watermark = new Watermark(watermarkImg, 50, 25, WatermarkPosition.WATERMARK_ORIENTATION_BOTTOM_RIGHT, 8, 8);
-        mLFLiveView.setWatermark(watermark);
+//        Bitmap watermarkImg = BitmapFactory.decodeResource(getResources(), R.mipmap.watermark);
+//        Watermark watermark = new Watermark(watermarkImg, 50, 25, WatermarkPosition.WATERMARK_ORIENTATION_BOTTOM_RIGHT, 8, 8);
+//        mLFLiveView.setWatermark(watermark);
 
-        //设置预览监听
         mLFLiveView.setCameraOpenListener(new CameraListener() {
             @Override
             public void onOpenSuccess() {
@@ -223,7 +221,7 @@ public class LandscapeActivity extends Activity {
         mLFLiveView.setPacker(packer);
         //设置发送器
         mRtmpSender = new RtmpSender();
-        mRtmpSender.setVideoParams(640, 360);
+        mRtmpSender.setVideoParams(1280, 720);
         mRtmpSender.setAudioParams(AudioConfiguration.DEFAULT_FREQUENCY, 16, false);
         mRtmpSender.setSenderListener(mSenderListener);
         mLFLiveView.setSender(mRtmpSender);

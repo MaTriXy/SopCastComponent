@@ -126,10 +126,6 @@ public class CameraLivingView extends CameraView {
     }
 
     private int check() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            SopCastLog.w(TAG, "Android sdk version error");
-            return SDK_VERSION_ERROR;
-        }
         if(!checkAec()) {
             SopCastLog.w(TAG, "Doesn't support audio aec");
             return AUDIO_AEC_ERROR;
@@ -169,9 +165,7 @@ public class CameraLivingView extends CameraView {
         if(mAudioConfiguration.aec) {
             if(mAudioConfiguration.frequency == 8000 ||
                     mAudioConfiguration.frequency == 16000) {
-                if(mAudioConfiguration.channelCount == 1) {
-                    return true;
-                }
+                return mAudioConfiguration.channelCount == 1;
             }
             return false;
         } else {

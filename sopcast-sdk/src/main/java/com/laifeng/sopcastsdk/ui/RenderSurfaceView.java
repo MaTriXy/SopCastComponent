@@ -41,7 +41,7 @@ public class RenderSurfaceView extends GLSurfaceView {
         setRenderer(mRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         SurfaceHolder surfaceHolder = getHolder();
-        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         surfaceHolder.addCallback(mSurfaceHolderCallback);
     }
 

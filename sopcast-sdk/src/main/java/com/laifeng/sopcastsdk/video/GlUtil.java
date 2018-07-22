@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-@TargetApi(18)
+
 public class GlUtil {
 	private static final String TAG = "GlUtil";
 

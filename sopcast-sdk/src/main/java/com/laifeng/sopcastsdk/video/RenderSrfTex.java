@@ -28,7 +28,7 @@ import java.nio.FloatBuffer;
  * @Time 下午2:17
  * @Version
  */
-@TargetApi(18)
+
 public class RenderSrfTex {
     private final FloatBuffer mNormalVtxBuf = GlUtil.createVertexBuffer();
     private final FloatBuffer mNormalTexCoordBuf = GlUtil.createTexCoordBuffer();

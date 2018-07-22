@@ -1,17 +1,15 @@
 package com.laifeng.sopcastsdk.camera;
 
-import android.annotation.TargetApi;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 
-import com.laifeng.sopcastsdk.configuration.CameraConfiguration;
-import com.laifeng.sopcastsdk.constant.SopCastConstant;
-import com.laifeng.sopcastsdk.blacklist.BlackListHelper;
 import com.laifeng.sopcastsdk.camera.exception.CameraDisabledException;
 import com.laifeng.sopcastsdk.camera.exception.CameraNotSupportException;
 import com.laifeng.sopcastsdk.camera.exception.NoCameraException;
+import com.laifeng.sopcastsdk.configuration.CameraConfiguration;
+import com.laifeng.sopcastsdk.constant.SopCastConstant;
 import com.laifeng.sopcastsdk.utils.SopCastLog;
 
 import java.util.ArrayList;
@@ -27,7 +25,6 @@ import java.util.List;
  * @Time 下午12:01
  * @Version
  */
-@TargetApi(14)
 public class CameraUtils {
 
     public static List<CameraData> getAllCamerasData(boolean isBackFirst) {
@@ -81,10 +78,10 @@ public class CameraUtils {
 
     public static void setPreviewFps(Camera camera, int fps, Camera.Parameters parameters) {
         //设置摄像头预览帧率
-        if(BlackListHelper.deviceInFpsBlacklisted()) {
-            SopCastLog.d(SopCastConstant.TAG, "Device in fps setting black list, so set the camera fps 15");
-            fps = 15;
-        }
+//        if(BlackListHelper.deviceInFpsBlacklisted()) {
+//            SopCastLog.d(SopCastConstant.TAG, "Device in fps setting black list, so set the camera fps 15");
+//            fps = 15;
+//        }
         try {
             parameters.setPreviewFrameRate(fps);
             camera.setParameters(parameters);
