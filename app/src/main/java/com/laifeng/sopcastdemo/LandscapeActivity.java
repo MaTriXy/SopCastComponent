@@ -1,6 +1,7 @@
 package com.laifeng.sopcastdemo;
 
 import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.laifeng.sopcastdemo.ui.MultiToggleImageButton;
+import com.laifeng.sopcastsdk.camera.CameraData;
 import com.laifeng.sopcastsdk.camera.CameraListener;
 import com.laifeng.sopcastsdk.configuration.AudioConfiguration;
 import com.laifeng.sopcastsdk.configuration.CameraConfiguration;
@@ -48,6 +50,8 @@ public class LandscapeActivity extends AppCompatActivity {
     private int mCurrentBps;
     private Dialog mUploadDialog;
     private EditText mAddressET;
+    int width = 1280;
+    int height = 720;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +102,7 @@ public class LandscapeActivity extends AppCompatActivity {
         mBeautyBtn.setOnStateChangeListener(new MultiToggleImageButton.OnStateChangeListener() {
             @Override
             public void stateChanged(View view, int state) {
-                if(isGray) {
+                if (isGray) {
                     mLFLiveView.setEffect(mNullEffect);
                     isGray = false;
                 } else {
@@ -116,7 +120,7 @@ public class LandscapeActivity extends AppCompatActivity {
         mRecordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isRecording) {
+                if (isRecording) {
                     mProgressConnecting.setVisibility(View.GONE);
                     Toast.makeText(LandscapeActivity.this, "stop living", Toast.LENGTH_SHORT).show();
                     mRecordBtn.setBackgroundResource(R.mipmap.ic_record_start);
@@ -137,7 +141,7 @@ public class LandscapeActivity extends AppCompatActivity {
 
     private void initRtmpAddressDialog() {
         LayoutInflater inflater = getLayoutInflater();
-        View playView = inflater.inflate(R.layout.address_dialog,(ViewGroup) findViewById(R.id.dialog));
+        View playView = inflater.inflate(R.layout.address_dialog, (ViewGroup) findViewById(R.id.dialog));
         mAddressET = (EditText) playView.findViewById(R.id.address);
         Button okBtn = (Button) playView.findViewById(R.id.ok);
         Button cancelBtn = (Button) playView.findViewById(R.id.cancel);
@@ -173,14 +177,19 @@ public class LandscapeActivity extends AppCompatActivity {
     private void initLiveView() {
         SopCastLog.isOpen(true);
         mLFLiveView.init();
+
+        CameraConfiguration.Orientation orientation = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) ?
+                CameraConfiguration.Orientation.PORTRAIT : CameraConfiguration.Orientation.LANDSCAPE;
+
+
         CameraConfiguration.Builder cameraBuilder = new CameraConfiguration.Builder();
-        cameraBuilder.setOrientation(CameraConfiguration.Orientation.LANDSCAPE)
+        cameraBuilder.setOrientation(orientation).setPreview(height, width)
                 .setFacing(CameraConfiguration.Facing.BACK);
         CameraConfiguration cameraConfiguration = cameraBuilder.build();
         mLFLiveView.setCameraConfiguration(cameraConfiguration);
 
         VideoConfiguration.Builder videoBuilder = new VideoConfiguration.Builder();
-        //videoBuilder.setSize(1280, 720);
+        videoBuilder.setSize(width, height);
         mVideoConfiguration = videoBuilder.build();
         mLFLiveView.setVideoConfiguration(mVideoConfiguration);
 
@@ -217,12 +226,12 @@ public class LandscapeActivity extends AppCompatActivity {
 
         //初始化flv打包器
         RtmpPacker packer = new RtmpPacker();
-        packer.initAudioParams(AudioConfiguration.DEFAULT_FREQUENCY, 16, false);
+        packer.initAudioParams(AudioConfiguration.DEFAULT_FREQUENCY, 32, true);
         mLFLiveView.setPacker(packer);
         //设置发送器
         mRtmpSender = new RtmpSender();
-        mRtmpSender.setVideoParams(1280, 720);
-        mRtmpSender.setAudioParams(AudioConfiguration.DEFAULT_FREQUENCY, 16, false);
+        mRtmpSender.setVideoParams(width, height);
+        mRtmpSender.setAudioParams(AudioConfiguration.DEFAULT_FREQUENCY, 32, true);
         mRtmpSender.setSenderListener(mSenderListener);
         mLFLiveView.setSender(mRtmpSender);
         mLFLiveView.setLivingStartListener(new CameraLivingView.LivingStartListener() {
@@ -273,12 +282,12 @@ public class LandscapeActivity extends AppCompatActivity {
 
         @Override
         public void onNetGood() {
-            if (mCurrentBps + 50 <= mVideoConfiguration.maxBps){
+            if (mCurrentBps + 50 <= mVideoConfiguration.maxBps) {
                 SopCastLog.d(TAG, "BPS_CHANGE good up 50");
                 int bps = mCurrentBps + 50;
-                if(mLFLiveView != null) {
+                if (mLFLiveView != null) {
                     boolean result = mLFLiveView.setVideoBps(bps);
-                    if(result) {
+                    if (result) {
                         mCurrentBps = bps;
                     }
                 }
@@ -290,12 +299,12 @@ public class LandscapeActivity extends AppCompatActivity {
 
         @Override
         public void onNetBad() {
-            if (mCurrentBps - 100 >= mVideoConfiguration.minBps){
+            if (mCurrentBps - 100 >= mVideoConfiguration.minBps) {
                 SopCastLog.d(TAG, "BPS_CHANGE bad down 100");
                 int bps = mCurrentBps - 100;
-                if(mLFLiveView != null) {
+                if (mLFLiveView != null) {
                     boolean result = mLFLiveView.setVideoBps(bps);
-                    if(result) {
+                    if (result) {
                         mCurrentBps = bps;
                     }
                 }
@@ -339,5 +348,28 @@ public class LandscapeActivity extends AppCompatActivity {
         super.onDestroy();
         mLFLiveView.stop();
         mLFLiveView.release();
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int facing = mLFLiveView.getCameraData().cameraFacing;
+        CameraConfiguration.Orientation orientation = (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) ?
+                CameraConfiguration.Orientation.PORTRAIT : CameraConfiguration.Orientation.LANDSCAPE;
+
+        CameraConfiguration.Builder cameraBuilder = new CameraConfiguration.Builder();
+        cameraBuilder.setOrientation(orientation)
+                .setFacing((facing == CameraData.FACING_FRONT) ? CameraConfiguration.Facing.FRONT : CameraConfiguration.Facing.BACK);
+        CameraConfiguration cameraConfiguration = cameraBuilder.build();
+        mLFLiveView.setCameraConfiguration(cameraConfiguration);
+
+        VideoConfiguration.Builder videoBuilder = new VideoConfiguration.Builder();
+        videoBuilder.setSize(height, width);
+        mVideoConfiguration = videoBuilder.build();
+        mLFLiveView.setVideoConfiguration(mVideoConfiguration);
+
+        mRtmpSender.setVideoParams(height, width);
+
     }
 }

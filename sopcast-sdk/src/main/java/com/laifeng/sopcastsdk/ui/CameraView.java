@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import com.laifeng.sopcastsdk.R;
 import com.laifeng.sopcastsdk.camera.CameraData;
 import com.laifeng.sopcastsdk.camera.CameraHolder;
@@ -41,7 +42,7 @@ public class CameraView extends FrameLayout {
     private boolean isFocusTouchMode = false;
     private boolean isMediaOverlay;
     private boolean isRenderSurfaceViewShowing = true;
-    private float mAspectRatio = 9.0f/16;
+    private float mAspectRatio = 9.0f / 16;
 
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -91,7 +92,7 @@ public class CameraView extends FrameLayout {
     @Override
     public void setVisibility(int visibility) {
         int currentVisibility = getVisibility();
-        if(visibility == currentVisibility) {
+        if (visibility == currentVisibility) {
             return;
         }
         switch (visibility) {
@@ -109,7 +110,7 @@ public class CameraView extends FrameLayout {
     }
 
     private void addRenderSurfaceView() {
-        if(!isRenderSurfaceViewShowing) {
+        if (!isRenderSurfaceViewShowing) {
             LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             addView(mRenderSurfaceView, 0, layoutParams);
             isRenderSurfaceViewShowing = true;
@@ -117,7 +118,7 @@ public class CameraView extends FrameLayout {
     }
 
     private void removeRenderSurfaceView() {
-        if(isRenderSurfaceViewShowing) {
+        if (isRenderSurfaceViewShowing) {
             removeView(mRenderSurfaceView);
             isRenderSurfaceViewShowing = false;
         }
@@ -157,7 +158,7 @@ public class CameraView extends FrameLayout {
 
     public void setZOrderMediaOverlay(boolean isMediaOverlay) {
         this.isMediaOverlay = isMediaOverlay;
-        if(mRenderSurfaceView != null) {
+        if (mRenderSurfaceView != null) {
             mRenderSurfaceView.setZOrderMediaOverlay(isMediaOverlay);
         }
     }
@@ -177,7 +178,7 @@ public class CameraView extends FrameLayout {
                 } else {
                     return false;
                 }
-                if(mZoomListener != null) {
+                if (mZoomListener != null) {
                     mZoomListener.onZoomProgress(progress);
                 }
             }
@@ -187,7 +188,7 @@ public class CameraView extends FrameLayout {
 
     protected void changeFocusModeUI() {
         CameraData cameraData = CameraHolder.instance().getCameraData();
-        if(cameraData != null && cameraData.supportTouchFocus && cameraData.touchFocusMode) {
+        if (cameraData != null && cameraData.supportTouchFocus && cameraData.touchFocusMode) {
             isFocusTouchMode = true;
             if (mFocusManager != null) {
                 mHandler.postDelayed(new Runnable() {
@@ -205,7 +206,7 @@ public class CameraView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(isFocusTouchMode) {
+        if (isFocusTouchMode) {
             return mGestureDetector.onTouchEvent(event) || mZoomGestureDetector.onTouchEvent(event);
         } else {
             return mZoomGestureDetector.onTouchEvent(event);
@@ -220,14 +221,12 @@ public class CameraView extends FrameLayout {
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        if(widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.AT_MOST) {
-            heightSpecSize = (int)(widthSpecSize / mAspectRatio);
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSpecSize,
-                    MeasureSpec.EXACTLY);
-        } else if(widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.EXACTLY) {
-            widthSpecSize = (int)(heightSpecSize * mAspectRatio);
-            widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSpecSize,
-                    MeasureSpec.EXACTLY);
+        if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.AT_MOST) {
+            heightSpecSize = (int) (widthSpecSize / mAspectRatio);
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSpecSize, MeasureSpec.EXACTLY);
+        } else if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.EXACTLY) {
+            widthSpecSize = (int) (heightSpecSize * mAspectRatio);
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSpecSize, MeasureSpec.EXACTLY);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
